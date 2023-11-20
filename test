@@ -1,1 +1,52 @@
-testing
+#!/usr/bin/python3
+"""testing"""
+import unittest
+import mysql.connector
+
+# This function checks if MySQL is available for testing
+def is_mysql_available():
+    try:
+        # Attempt to connect to MySQL
+        connection = mysql.connector.connect(
+            host="your_host",
+            user="your_user",
+            password="your_password",
+            database="your_database"
+        )
+        connection.close()
+        return True
+    except mysql.connector.Error:
+        return False
+
+# Define a test case class
+class TestMySQLIntegration(unittest.TestCase):
+    @unittest.skipIf(not is_mysql_available(), "MySQL not available for testing")
+    def test_create_state_in_database(self):
+        """ Connect to the MySQL database"""
+        connection = mysql.connector.connect(
+            host="your_host",
+            user="your_user",
+            password="your_password",
+            database="your_database"
+        )
+        cursor = connection.cursor()
+
+        # Get the initial number of records in the 'states' table
+        cursor.execute("SELECT COUNT(*) FROM states")
+        initial_count = cursor.fetchone()[0]
+
+        # Execute the console command (in this case, we're simulating adding a new state)
+        cursor.execute("INSERT INTO states (name) VALUES ('California')")
+
+        # Get the number of records again
+        cursor.execute("SELECT COUNT(*) FROM states")
+        final_count = cursor.fetchone()[0]
+
+        # Close the connection
+        connection.close()
+
+        # Validate that the action changed the state (difference is +1)
+        self.assertEqual(final_count - initial_count, 1)
+
+if __name__ == '__main__':
+    unittest.main()
