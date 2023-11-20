@@ -118,6 +118,53 @@ class HBNBCommand(cmd.Cmd):
         if not args:
             print("** class name missing **")
             return
+        args_list = args.split()
+        class_name = args_list[0]
+        if class_name not in HBNBCommand.classes:
+            print("** class doesn't exist **")
+            return
+
+        if len(args_list) == 1:
+            print("** instance id missing **")
+            return
+
+        # Get the instance ID
+        instance_id = args_list[1]
+
+        # Remove class name and instance id from the arguments list
+        args_list = args_list[2:]
+
+        # Get the class corresponding to the class name
+        obj_class = HBNBCommand.classes[class_name]
+
+        # Create an instance of the class
+        obj_instance = obj_class()
+
+        # Iterate through the parameters and set attributes
+        for param in args_list:
+            # Split the parameter into key and value
+            key_value = param.split('=')
+
+            # Check if the parameter has the correct format
+            if len(key_value) == 2:
+                key, value = key_value
+                # Remove double quotes and replace underscores with spaces
+                value = value.replace('_', ' ').replace('\"', '')
+            
+                # Check the value type and set the attribute accordingly
+                if value.isdigit():
+                    setattr(obj_instance, key, int(value))
+                elif '.' in value and all(part.isdigit() for part in value.split('.')):
+                    setattr(obj_instance, key, float(value))
+                else:
+                    setattr(obj_instance, key, value)
+    
+        # Save the object to the storage engine (assuming FileStorage in this case)
+        models.storage.new(obj_instance)
+        models.storage.save()
+
+        print(obj_instance.id)
+
 
         arg_parts = args.split()
         class_name = arg_parts[0]
