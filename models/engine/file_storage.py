@@ -22,7 +22,8 @@ class FileStorage:
     __objects = {}
 
     def all(self, cls=None):
-        """Returns a dictionary of models currently in storage"""
+        """Returns a dictionary of models currently in the storage"""
+        # Check if class is empty
         if cls is None:
             return self.__objects
 
@@ -52,12 +53,14 @@ class FileStorage:
             json.dump(temp, f)
 
     def delete(self, obj=None):
-        """ The Method deletes Objects """
+        """ The Method is used to deletes Objects """
         if obj is not None:
             key = "{}.{}".format(type(obj).__name__, obj.id)
             if key in self.__objects:
                 del self.__objects[key]
             self.save()
+        else:
+            return()
 
     def reload(self):
         """Loads storage dictionary from file"""
