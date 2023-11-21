@@ -53,9 +53,7 @@ class FileStorage:
 
     def delete(self, obj=None):
         """ The Method deletes Objects """
-        if obj is None:
-            return
-        else:
+        if obj is not None:
             key = "{}.{}".format(type(obj).__name__, obj.id)
             if key in self.__objects:
                 del self.__objects[key]
