@@ -384,6 +384,6 @@ class HBNBCommand(cmd.Cmd):
         print("Usage: update <className> <id> <attName> <attVal>\n")
 
 if __name__ == "__main__":
-    if storage.__class__.__name__ == 'DBStorage':
-        storage.reload()
+    #if storage.__class__.__name__ == 'DBStorage':
+        #storage.reload()
     HBNBCommand().cmdloop()
