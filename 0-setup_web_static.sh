@@ -43,8 +43,7 @@ sudo chown -R ubuntu:ubuntu /data/
 # Update the nginx config file to serve the content of /data/web_static/current/ to hbnb_static
 nginxconf="/etc/nginx/sites-available/default"
 # Modify the location block with alias
-sudo bash -c 'echo
-server {
+sudo echo "server {
 	listen 80 default_server;
 	listen [::]:80 default_server;
 	add_header X-Served-By \$HOSTNAME;
@@ -54,7 +53,7 @@ server {
     	location /hbnb_static/ {
         	alias /data/web_static/current/;
     }
-}' > "$nginxconf"
+}" | sudo tee -a "$nginxconf"
 
 # Restart nginx
 sudo service nginx restart
