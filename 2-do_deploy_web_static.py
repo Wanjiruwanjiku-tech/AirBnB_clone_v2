@@ -1,41 +1,59 @@
 #!/usr/bin/python3
-"""Deploy an archive of static html to my web servers with Fabric3"""
+"""
+cript that distiributes an archive to your web servers
+"""
 
-from fabric import api
-from fabric.contrib import files
+from datetime import datetime
+from fabric.api import *
 import os
 
+env.hosts = ['54.237.36.156', '18.206.207.239']
+env.user = 'ubuntu'
 
-api.env.hosts = ['52.90.14.176', '100.27.5.123']
-api.env.user = 'ubuntu'
+
+def do_pack():
+    """
+    return the archive path if archive has generated correctly.
+    """
+
+    local("mkdir -p versions")
+    date = datetime.now().strftime("%Y%m%d%H%M%S")
+    archived_f_path = "versions/web_static_{}.tgz".format(date)
+    t_gzip_archive = local("tar -cvzf {} web_static".format(archived_f_path))
+
+    if t_gzip_archive.succeeded:
+        return archived_f_path
+    else:
+        return None
+
+    return False
+
 
 def do_deploy(archive_path):
-    """Function to transfer archive_path to web servers.
-
-    Args:
-        archive_path (str): path of the .tgz file to transfer
-
-    Returns: True on success, False otherwise.
     """
-    if not os.path.isfile(archive_path):
-        return False
-    with api.cd('/tmp'):
-        basename = os.path.basename(archive_path)
-        root, ext = os.path.splitext(basename)
-        outpath = '/data/web_static/releases/{}'.format(root)
-        try:
-            putpath = api.put(archive_path)
-            if files.exists(outpath):
-                api.run('rm -rdf {}'.format(outpath))
-            api.run('mkdir -p {}'.format(outpath))
-            api.run('tar -xzf {} -C {}'.format(putpath[0], outpath))
-            api.run('rm -f {}'.format(putpath[0]))
-            api.run('mv -u {}/web_static/* {}'.format(outpath, outpath))
-            api.run('rm -rf {}/web_static'.format(outpath))
-            api.run('rm -rf /data/web_static/current')
-            api.run('ln -sf {} /data/web_static/current'.format(outpath))
-            print('New version deployed!')
-        except:
-            return False
-        else:
-            return True
+    Distribute archive.
+    """
+    try:
+        if os.path.exists(archive_path):
+            archived_file = archive_path[9:]
+        newest_version = "/data/web_static/releases/" + archived_file[:-4]
+        archived_file = "/tmp/" + archived_file
+        put(archive_path, "/tmp/")
+        run("sudo mkdir -p {}".format(newest_version))
+        run("sudo tar -xzf {} -C {}/".format(archived_file, newest_version))
+        run("sudo rm {}".format(archived_file))
+
+        # Remove existing directories if they exist
+        run("sudo rm -rf {}/web_static/images".format(newest_version))
+        run("sudo rm -rf {}/web_static/styles".format(newest_version))
+
+        run("sudo mv {}/web_static/* {}".format(
+            newest_version, newest_version
+            ))
+        run("sudo rm -rf {}/web_static".format(newest_version))
+        run("sudo rm -rf /data/web_static/current")
+        run("sudo ln -s {} /data/web_static/current".format(newest_version))
+        print("New version deployed!")
+        return True
+    except Exception:
+        return False:
