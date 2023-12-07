@@ -19,7 +19,7 @@ sudo mkdir /data/web_static/releases/test/
 
 # Create a html file with simple content
 sudo touch /data/web_static/releases/test/index.html
-echo '<html>
+sudo echo '<html>
   <head>
   </head>
   <body>
@@ -43,7 +43,7 @@ sudo chown -R ubuntu:ubuntu /data/
 # Update the nginx config file to serve the content of /data/web_static/current/ to hbnb_static
 nginxconf="/etc/nginx/nginx.conf"
 # Backup the original configuration file
-scp "$nginxconf" "$nginxconf.bak"
+sudo cp "$nginxconf" "$nginxconf.bak"
 # Modify the location block with alias
 sudo bash -c 'cat <<EOF >>'"$nginxconf"'
 server {
