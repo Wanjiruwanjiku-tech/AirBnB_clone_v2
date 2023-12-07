@@ -8,14 +8,14 @@ sudo apt-get install -y nginx
 sudo mkdir -p /data
 
 # Create the folder /data/web_static/
-sudo mkdir /data/web_static
+sudo mkdir -p /data/web_static
 
 # Create the folder /data/web_static/releases/ and /data/web_static/shared/
-sudo mkdir /data/web_static/shared
-sudo mkdir /data/web_static/releases
+sudo mkdir -p  /data/web_static/shared
+sudo mkdir -p /data/web_static/releases
 
 # Create the folder 
-sudo mkdir /data/web_static/releases/test/
+sudo mkdir -p /data/web_static/releases/test/
 
 # Create a html file with simple content
 sudo touch /data/web_static/releases/test/index.html
