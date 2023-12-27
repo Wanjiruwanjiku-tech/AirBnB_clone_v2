@@ -43,5 +43,16 @@ def display_C_text(text):
     """
     return 'C {}'.format(text.replace('_', ' '))
 
+@app.route('/python/<text>', strict_slashes=False)
+def display_python_text(text):
+    """The Function displays Python followed by
+    the value of the text variable
+    
+    Keyword arguments:
+    text -- Contains the value to display 
+    Return: Python {text}
+    """
+    return 'Python {}'.format(text.replace('_', ' '))
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
