@@ -6,6 +6,7 @@ This particular script adds a new function
 """
 # Import the flask class from flask
 from flask import Flask
+from flask import abort
 
 # Create an instance of the Flask class
 app = Flask(__name__)
@@ -42,6 +43,30 @@ def display_C_text(text):
     Return: C <text>
     """
     return 'C {}'.format(text.replace('_', ' '))
+
+@app.route('/python', strict_slashes=False)
+@app.route('/python/<text>', strict_slashes=False)
+def display_python_text(text='is cool'):
+    """The Function displays Python followed by
+    the value of the text variable
+    
+    Keyword arguments:
+    text -- Contains the value to display 
+    Return: Python {text}
+    """
+    return 'Python {}'.format(text.replace('_', ' '))
+
+@app.route('/number/<int:n>', strict_slashes=False)
+def display_integer(n):
+    """
+    The function display 
+    “n is a number” only if n is an integer
+    
+    Keyword arguments:
+    n -- The number to display
+    Return: n
+    """
+    return '{} is a number'.format(n)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port='5000')
