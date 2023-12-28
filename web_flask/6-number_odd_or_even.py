@@ -88,13 +88,12 @@ def odd_and_even(n):
     argument -- The number to display
     Return: a html page
     """
-    try:
-        if n % 2 == 0:
+    if n % 2 == 0:
             result = 'even'
-        else:
-            result = 'odd'
-    except ValueError:
-         return render_template('6-number_odd_or_even.html', n=n, result=result)
+    else:
+        result = 'odd'
+    
+    return render_template('6-number_odd_or_even.html', n=n, result=result)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port='5000')
