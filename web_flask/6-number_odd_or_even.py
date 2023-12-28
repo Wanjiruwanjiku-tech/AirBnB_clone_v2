@@ -88,7 +88,11 @@ def odd_and_even(n):
     argument -- The number to display
     Return: a html page
     """
-    result = 'even' if n % 2 == 0 else 'odd'
+    if n % 2 == 0:
+        result = 'even'
+    else:
+        result = 'odd'
+        
     return render_template('6-number_odd_or_even.html', n=n, result=result)
 
 if __name__ == '__main__':
